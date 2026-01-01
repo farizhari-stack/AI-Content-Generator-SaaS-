@@ -19,10 +19,12 @@ export class GenerateController {
             // [NEW] Check credits
             const { checkCredits, deductCredit } = await import("@/services/credit-service");
             const creditCheck = await checkCredits();
+
             if (!creditCheck.success) {
+                const status = creditCheck.error === "Unauthorized" ? 401 : 403;
                 return NextResponse.json(
                     { success: false, error: creditCheck.error || "Insufficient credits" },
-                    { status: 403 }
+                    { status }
                 );
             }
 

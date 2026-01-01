@@ -31,11 +31,18 @@ export default function Home() {
       });
 
       const data = await response.json();
+
+      if (response.status === 401) {
+        // Unauthorized - redirect to login
+        window.location.href = "/login?error=Please login to generate";
+        return;
+      }
+
       if (data.success) {
         setResult(data.data);
       } else {
         console.error("Generation failed:", data.error);
-        alert("Failed to generate description. Please try again.");
+        alert(data.error || "Failed to generate description. Please try again.");
       }
     } catch (error) {
       console.error("Error:", error);

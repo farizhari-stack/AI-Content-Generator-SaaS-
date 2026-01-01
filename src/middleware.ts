@@ -6,10 +6,20 @@ export async function middleware(request: NextRequest) {
         request,
     })
 
+    // Skip auth check if Supabase is not configured
+    // Hardcoded credentials
+    const supabaseUrl = "https://whnzulxwaltehzdpbxyc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indobnp1bHh3YWx0ZWh6ZHBieHljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyNzg4MDQsImV4cCI6MjA4Mjg1NDgwNH0.947pMwC2DgGD7gzfceb6wNAJ4P2gtyy8EwoMSPLktoY";
+
+    if (!supabaseUrl || !supabaseKey) {
+        console.warn('Supabase not configured, skipping auth middleware')
+        return supabaseResponse
+    }
+
     // Create client to refresh session
     const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        supabaseUrl,
+        supabaseKey,
         {
             cookies: {
                 getAll() {
